@@ -1,0 +1,29 @@
+- set_fact:
+    powerline_url: '{{ powerline_default_url }}/v1.22.1/powerline-go-linux-amd64'
+  when: ansible_architecture == 'x86_64'
+
+- set_fact:
+    powerline_url: '{{ powerline_default_url }}/v1.22.1/powerline-go-linux-arm64'
+  when: ansible_architecture == 'aarch64'
+
+- get_url:
+    url: '{{ powerline_url }}'
+    dest: /usr/local/bin/powerline-go
+    mode: 0755
+    owner: root
+    force: '{{ powerline_force_download | default(false) }}'
+
+- name: Add powerline startup script
+  copy:
+    dest: /etc/profile.d/powerline.sh
+    content: |
+      # ansible-managed, do not touch
+      
+      function _update_ps1() {
+        PS1="$(/usr/local/bin/powerline-go -error $? -jobs $(jobs -p | wc -l) --modules "{{ powerline_modules }}"  -newline)"
+      }
+      
+      if [ "$TERM" != "linux" ] && [ -x "/usr/local/bin/powerline-go" ]; then
+          PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
+      fi
+

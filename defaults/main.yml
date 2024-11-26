@@ -1,0 +1,13 @@
+
+# renovate: datasource=github-releases depName=justjanne/powerline-go
+powerline_version: 1.25
+
+powerline_url: ~
+powerline_default_url: https://github.com/justjanne/powerline-go/releases/download/
+
+powerline_modules:
+  venv,user,host,ssh,cwd,perms,git,kube,jobs,exit,root
+
+# ensure powerline-go is downloaded every time
+# do not enable this unless you neeed to redownload powerline-go
+powerline_force_download: false
